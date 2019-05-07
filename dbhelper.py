@@ -39,3 +39,14 @@ class DBHelper:
                 connection.commit()
         finally:
             connection.close()
+
+class MockHelper():
+    # Stub class used for testing without an actual database
+    def connect(self, database="crimes"):
+        pass
+    def get_all_inputs(self):
+        return []
+    def add_input(self, data):
+        pass
+    def clear_all(self):
+        pass
