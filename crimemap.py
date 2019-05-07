@@ -1,4 +1,5 @@
 import dbconfig
+from dbconfig import maps_key as maps_key
 
 # Only import the non-mock helper if not testing
 if dbconfig.test:
@@ -18,7 +19,7 @@ def home():
     except Exception as e:
         print(e)
         data = None
-    return render_template("home.html", data=data)
+    return render_template("home.html", data=data, maps_key=maps_key)
 
 @app.route("/add", methods=["POST"])
 def add():
