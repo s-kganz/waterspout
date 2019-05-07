@@ -1,4 +1,11 @@
-from dbhelper import DBHelper 
+import dbconfig
+
+# Only import the non-mock helper if not testing
+if dbconfig.test:
+    from dbhelper import MockHelper as DBHelper
+else:
+    from dbhelper import DBHelper 
+
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
