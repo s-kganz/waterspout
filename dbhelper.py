@@ -23,9 +23,9 @@ class DBHelper:
         connection = self.connect()
         try:
             #TODO resolve SQL injection flaw here
-            query = "INSERT INTO crimes (description) VALUES ('{}');".format(data)
+            query = "INSERT INTO crimes (description) VALUES (%s);"
             with connection.cursor() as cursor:
-                cursor.execute(query)
+                cursor.execute(query, data)
                 connection.commit() # made database change, commit needed
         finally:
             connection.close()
