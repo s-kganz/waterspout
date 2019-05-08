@@ -40,6 +40,19 @@ class DBHelper:
         finally:
             connection.close()
 
+    def add_crime(self, category, date, lat, lon, desc):
+        sql = '''INSERT INTO CRIMES (category, date, latitude, longitude, description)
+        VALUES (%s, %s, %s, %s, %s)'''
+        connection = self.connect()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(sql, (category, date, lat lon, desc))
+            connection.commit()
+        except Exception as e:
+            print(e)
+        finally:
+            connection.close()
+
 class MockHelper():
     # Stub class used for testing without an actual database
     def connect(self, database="crimes"):
@@ -49,4 +62,6 @@ class MockHelper():
     def add_input(self, data):
         pass
     def clear_all(self):
+        pass
+    def add_crime(self, category, date, lat, lon, desc):
         pass

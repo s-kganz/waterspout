@@ -12,14 +12,7 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 DB = DBHelper()
 
-@app.route('/')
-def home():
-    try:
-        data = DB.get_all_inputs()
-    except Exception as e:
-        print(e)
-        data = None
-    return render_template("home.html", data=data, maps_key=maps_key)
+
 
 @app.route("/add", methods=["POST"])
 def add():
@@ -38,6 +31,25 @@ def clear():
         print(e)
     return home()
 
+@app.route("/submitcrime", methods=["POST"])
+def submitcrime():
+    category = request.form.get("category")
+    date = request.form.get("date")
+    lat = float(request.form.get("latitude"))
+    lon = float(request.form.get("longitude"))
+    desc = request.form.get("description")
+    DB.add_crime(category, date, lat, lon, desc)
+    return home()
+
+
+@app.route('/')
+def home():
+    try:
+        data = DB.get_all_inputs()
+    except Exception as e:
+        print(e)
+        data = None
+    return render_template("home.html", data=data, maps_key=maps_key)
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
     
