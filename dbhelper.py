@@ -51,7 +51,7 @@ class DBHelper:
         except Exception as e:
             print(e)
         finally:
-            connection.close()
+            connection.close() 
 
 class MockHelper():
     # Stub class used for testing without an actual database
