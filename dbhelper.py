@@ -1,4 +1,5 @@
 import pymysql
+import datetime
 import dbconfig
 
 class DBHelper:
@@ -52,6 +53,30 @@ class DBHelper:
             print(e)
         finally:
             connection.close() 
+    
+    def get_all_crimes(self):
+        connection = self.connect()
+        try:
+            sql = '''SELECT category, latitude, longitude, date, description
+            FROM crimes;
+            '''
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            
+            named_crimes = []
+            for crime in cursor:
+                named_crime = {
+                    'category': crime[0],
+                    'latitude': crime[1],
+                    'longitude': crime[2],
+                    'date' : datetime.datetime.strftime(crime[3], "%Y-%m-%d"),
+                    'description': crime[4]
+                }
+                named_crimes.append(named_crime)
+            
+            return named_crimes
+        finally:
+            connection.close()
 
 class MockHelper():
     # Stub class used for testing without an actual database
@@ -65,3 +90,9 @@ class MockHelper():
         pass
     def add_crime(self, category, date, lat, lon, desc):
         pass
+    def get_all_crimes(self):
+        return [{ 'latitude': -33.301304,
+        'longitude': 26.523355,
+        'date': "2000-01-01",
+        'category': "mugging",
+        'description': "mock description" }]
