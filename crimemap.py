@@ -8,6 +8,7 @@ else:
     from dbhelper import DBHelper 
 
 from flask import Flask, render_template, request
+import json
 
 app = Flask(__name__)
 DB = DBHelper()
@@ -49,7 +50,11 @@ def home():
     except Exception as e:
         print(e)
         data = None
-    return render_template("home.html", data=data, maps_key=maps_key)
+    crimes = DB.get_all_crimes()
+    crimes = json.dumps(crimes)
+    return render_template("home.html", data=data, maps_key=maps_key, crimes=crimes)
+
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
     
