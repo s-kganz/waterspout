@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <link type="text/css" rel="stylesheet" href="{{url_for('static',
+        filename='css/style.css') }}" />
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{maps_key}}">
     </script>
     <script type="text/javascript">
@@ -31,6 +33,8 @@
                     map: map
                 });
             }
+            document.getElementById('latitude').value = location.lat();
+            document.getElementById('longitude').value = location.lng();
         }
     </script>
 </head>
@@ -38,7 +42,7 @@
 <body onload="initialize()">
     <h1>Crime Map</h1>
     <p>Map of recent crimes in the Grahamstown area.</p>
-    <div id="map-canvas" style="width:80%; height:500px;"></div>
+    <div id="map-canvas"></div>
 
     <div id="newcrimeform">
         <h2>Submit a new crime:</h2>
