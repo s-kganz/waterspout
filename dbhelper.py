@@ -41,12 +41,12 @@ class DBHelper:
             connection.close()
 
     def add_crime(self, category, date, lat, lon, desc):
-        sql = '''INSERT INTO CRIMES (category, date, latitude, longitude, description)
-        VALUES (%s, %s, %s, %s, %s)'''
+        sql = '''INSERT INTO crimes (category, date, latitude, longitude, description)
+        VALUES (%s, %s, %s, %s, %s);'''
         connection = self.connect()
         try:
             with connection.cursor() as cursor:
-                cursor.execute(sql, (category, date, lat lon, desc))
+                cursor.execute(sql, (category, date, lat, lon, desc))
             connection.commit()
         except Exception as e:
             print(e)
