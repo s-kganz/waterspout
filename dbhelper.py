@@ -65,15 +65,18 @@ class DBHelper:
             
             named_crimes = []
             for crime in cursor:
-                named_crime = {
-                    'category': crime[0],
-                    'latitude': crime[1],
-                    'longitude': crime[2],
-                    'date' : datetime.datetime.strftime(crime[3], "%Y-%m-%d"),
-                    'description': crime[4]
-                }
-                named_crimes.append(named_crime)
-            
+                try:
+                    named_crime = {
+                        'category': crime[0],
+                        'latitude': crime[1],
+                        'longitude': crime[2],
+                        'date' : datetime.datetime.strftime(crime[3], "%Y-%m-%d"),
+                        'description': crime[4]
+                    }
+                    named_crimes.append(named_crime)
+                except Exception as e:
+                    print(e)
+                    continue
             return named_crimes
         finally:
             connection.close()

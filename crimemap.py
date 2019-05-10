@@ -1,3 +1,5 @@
+#!/bin/python
+
 import dbconfig
 from dbconfig import maps_key as maps_key
 
