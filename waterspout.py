@@ -14,7 +14,7 @@ saga = Saga_cmd()
 def generate_polygon(lat=42.73, lon=-73.68):
     # First, convert lat/lon to epsg26918 for call to upslope area
     inproj = Proj(init="epsg:4326") # 4326 GPS coord system as of 1984
-    outproj = Proj(init="epsg:26918")
+    outproj = Proj(init="epsg:26918") # 26918 NAD stateplane NY North
 
     x,y = transform(inproj, outproj, lon, lat)
 
@@ -41,7 +41,8 @@ def generate_polygon(lat=42.73, lon=-73.68):
     return home(lat=lat, lon=lon)
 
 @app.route("/submit", methods=["POST"])
-def submitcrime():
+def submit():
+    # Get lat/lon from form and start generation process
     lat = float(request.form.get("latitude"))
     lon = float(request.form.get("longitude"))
 
@@ -51,12 +52,15 @@ def submitcrime():
 
 @app.route('/')
 def home(lat=-99999, lon=-99999):
-    catchment = list()
-    boundary = list()
+    # Read in boundary shpfile
+    bound_df = list()
     bound_df = list(DBF(filenames["boundary_db"]))
+    # convert to dataframe and transform to list of dicts
     bound_df = pd.DataFrame(bound_df)
     bound_df = bound_df.rename(columns = {"LON": "lng", "LAT": "lat"})
-    bound_df = filter(lambda x: x["ID_PART"] == 0, bound_df.to_dict(orient="records"))
+    bound_points = filter(lambda x: x["ID_PART"] == 0, bound_df.to_dict(orient="records"))
+    # Dummy catchment points in case read fails
+    catchment = list()
     try:
         df = list(DBF(filenames["points_db"], load=True))
         df = pd.DataFrame(df)
@@ -65,9 +69,13 @@ def home(lat=-99999, lon=-99999):
     except Exception as e:
         catchment = list()
         print(e)
-    return render_template("home.html", maps_key=maps_key, points=catchment, boundary=bound_df, marklat=lat, marklon=lon)
+    return render_template("home.html", 
+                           maps_key=maps_key, 
+                           points=catchment, 
+                           boundary=bound_points) 
 
 
 if __name__ == "__main__":
+    # Send it
     app.run(port=5000, debug=True)
     
