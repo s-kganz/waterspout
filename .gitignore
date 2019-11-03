@@ -1,5 +1,8 @@
 *.txt
 __pycache__/
 .vscode/
-dbconfig.py
+config.py
 *.pyc
+data/
+flask/
+saga-7.3.0_x64/
