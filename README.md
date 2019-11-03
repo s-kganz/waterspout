@@ -1,3 +1,5 @@
+This is a project for [HackRPI 2019](hackrpi.com)
+
 ## Inspiration
 The hill RPI sits on is geologically unique. Bedrock is very close to the surface, which means that when it rains, water stays close to the surface and can cause flooding. In fact, this exact thing happened right before classes started this year and tore out plenty of infrastructure on campus.
 
