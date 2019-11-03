@@ -9,32 +9,56 @@
     <script type="text/javascript">
         var map;
         var marker;
+        var catchment;
 
         function initialize() {
             var mapOptions = {
-                center: new google.maps.LatLng(-
-                    33.30578381949298, 26.523442268371582),
-                zoom: 15
+                center: new google.maps.LatLng(
+                    42.7293537081706, -73.67598719938633),
+                zoom: 12
             };
             map = new
                 google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
             google.maps.event.addListener(map, 'click', function (event) {
                 placeMarker(event.latLng);
             });
-            placeCrimes({{crimes | safe}});
-        }
 
-        function placeCrimes(crimes) {
-            for (i = 0; i < crimes.length; i++) {
-                crime = new google.maps.Marker({
-                    position: new google.maps.LatLng(crimes[i].latitude, crimes[i].
-                        longitude),
-                    map: map,
-                    title: crimes[i].date + "\n" +
-                        crimes[i].category + "\n" + crimes[i].description
-                }
-                );
-            }
+            // Generate polyline from points dbf file
+            var catchmentCoords = [
+                {% for p in points %}
+                {lat: {{p['lat']}}, lng: {{p['lng']}} },
+                {% endfor %}
+            ];
+            catchment = new google.maps.Polygon({
+                path: catchmentCoords,
+                geodesic: true,
+                fillColor: "blue",
+                fillOpacity: 0.5,
+                strokeOpacity: 0.0
+            });
+
+            catchment.setMap(map);
+
+            // Generate polyline of DEM boundary
+            
+            var boundaryCoords = [
+                {% for p in boundary %}
+                {lat: {{p['lat']}}, lng: {{p['lng']}} },
+                {% endfor %}
+            ];
+            
+            boundaryPoly = new google.maps.Polygon({
+                path: boundaryCoords,
+                geodesic: true,
+                strokeColor: "#FF0000",
+                fillOpacity: 0.0,
+                strokeWeight: 2,
+                clickable: false
+            });
+
+            boundaryPoly.setMap(map);
+            
         }
 
         function placeMarker(location) {
@@ -54,26 +78,17 @@
 </head>
 
 <body onload="initialize()">
-    <h1>Crime Map</h1>
-    <p>Map of recent crimes in the Grahamstown area.</p>
+    <h1>Waterspout</h1>
+    <p>Map of upslope catchment area for the selected location.</p>
     <div id="map-canvas"></div>
 
     <div id="newcrimeform">
-        <h2>Submit a new crime:</h2>
-        <form action="/submitcrime" method="POST">
-            <label for="category">Category</label>
-            <select name="category" id="category">
-                <option value="mugging">Mugging</option>
-                <option value="breakin">Break-in</option>
-            </select>
-            <label for="date">Date</label>
-            <input name="date" id="date" type="date">
+        <h2>Pick a new point:</h2>
+        <form action="/submit" method="POST">
             <label for="latitude">Latitude</label>
             <input name="latitude" id="latitude" type="text">
             <label for="longitude">Longitude</label>
             <input name="longitude" id="longitude" type="text">
-            <label for="description">Description</label>
-            <textarea name="description" id="description" placeholder="A brief but detailed description"></textarea>
             <input type="submit" value="Submit">
         </form>
     </div>
