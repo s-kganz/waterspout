@@ -2,8 +2,9 @@
 <html lang="en">
 
 <head>
-    <link type="text/css" rel="stylesheet" href="{{url_for('static',
-        filename='css/style.css') }}" />
+    <title>Waterspout</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{maps_key}}">
     </script>
     <script type="text/javascript">
